@@ -10,9 +10,20 @@
 </head>
 
 <body>
-  <h1>Dashboard de Sensores</h1>
-  <canvas id="tempChart" height="100"></canvas>
-  <canvas id="humChart" height="100"></canvas>
+  <header>
+    <h1>Dashboard de Sensores Ambientales</h1>
+  </header>
+
+  <main>
+    <div class="chart-container">
+      <h2>Temperatura</h2>
+      <canvas id="tempChart"></canvas>
+    </div>
+    <div class="chart-container">
+      <h2>Humedad</h2>
+      <canvas id="humChart"></canvas>
+    </div>
+  </main>
 
   <script src="script.js"></script>
 </body>
