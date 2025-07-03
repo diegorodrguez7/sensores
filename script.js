@@ -3,7 +3,15 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 let tempChart, humChart;
 
+// Variables globales para mantener el filtro actual
+let fechaFiltroInicio = null;
+let fechaFiltroFin = null;
+
 async function obtenerDatos(fechaInicio = null, fechaFin = null) {
+  // Actualiza las fechas del filtro global
+  fechaFiltroInicio = fechaInicio;
+  fechaFiltroFin = fechaFin;
+
   let url = `${SUPABASE_URL}/rest/v1/lecturas?select=*`;
   if (fechaInicio && fechaFin) {
     // Convierte las fechas a ISO 8601 para supabase
@@ -81,7 +89,16 @@ function obtenerDatosFiltrados() {
 }
 
 function descargarCSV() {
-  fetch(`${SUPABASE_URL}/rest/v1/lecturas?select=*`, {
+  let url = `${SUPABASE_URL}/rest/v1/lecturas?select=*`;
+
+  // Usa las fechas filtradas si existen
+  if (fechaFiltroInicio && fechaFiltroFin) {
+    const desdeISO = new Date(fechaFiltroInicio).toISOString();
+    const hastaISO = new Date(fechaFiltroFin).toISOString();
+    url += `&fecha=gte.${encodeURIComponent(desdeISO)}&fecha=lte.${encodeURIComponent(hastaISO)}`;
+  }
+
+  fetch(url, {
     headers: {
       apikey: SUPABASE_KEY,
       Authorization: `Bearer ${SUPABASE_KEY}`,
@@ -100,7 +117,7 @@ function descargarCSV() {
 
     const a = document.createElement("a");
     a.href = url;
-    a.download = "lecturas.csv";
+    a.download = "lecturas_filtradas.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -126,17 +143,13 @@ function mostrarFechaHoy() {
   body.insertBefore(contenedorFecha, header);
 }
 
-// Llama a la función para mostrar la fecha
+// Ejecutar funciones iniciales
 mostrarFechaHoy();
 
 // Carga inicial y refresco cada 5 minutos
 obtenerDatos();
 setInterval(() => obtenerDatos(), 300000);  // 300000 ms = 5 min
 
-
-// Carga inicial y refresco cada 5 minutos
-obtenerDatos();
-setInterval(() => obtenerDatos(), 300000);  // 300000 ms = 5 min
 
 
 
