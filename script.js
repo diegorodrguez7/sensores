@@ -6,7 +6,11 @@ let tempChart, humChart;
 async function obtenerDatos(fechaInicio = null, fechaFin = null) {
   let url = `${SUPABASE_URL}/rest/v1/lecturas?select=*`;
   if (fechaInicio && fechaFin) {
-    url += `&fecha=gte.${encodeURIComponent(fechaInicio)}&fecha=lte.${encodeURIComponent(fechaFin)}`;
+    // Convierte las fechas a ISO 8601 para supabase
+    const desdeISO = new Date(fechaInicio).toISOString();
+    const hastaISO = new Date(fechaFin).toISOString();
+
+    url += `&fecha=gte.${encodeURIComponent(desdeISO)}&fecha=lte.${encodeURIComponent(hastaISO)}`;
   }
 
   const response = await fetch(url, {
@@ -16,7 +20,14 @@ async function obtenerDatos(fechaInicio = null, fechaFin = null) {
     },
   });
   const datos = await response.json();
-  if (!datos.length) return;
+  if (!datos.length) {
+    // Si no hay datos, limpia la gráfica y valores
+    if (tempChart) tempChart.destroy();
+    if (humChart) humChart.destroy();
+    document.getElementById("ultimaTemp").textContent = "--";
+    document.getElementById("ultimaHum").textContent = "--";
+    return;
+  }
 
   const etiquetas = datos.map(d => new Date(d.fecha).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
   const temperaturas = datos.map(d => d.temperatura);
@@ -28,7 +39,6 @@ async function obtenerDatos(fechaInicio = null, fechaFin = null) {
   renderizarChart("tempChart", "Temperatura (°C)", etiquetas, temperaturas, "rgb(255, 99, 132)", tempChart, c => tempChart = c);
   renderizarChart("humChart", "Humedad (%)", etiquetas, humedades, "rgb(54, 162, 235)", humChart, c => humChart = c);
 }
-
 
 function renderizarChart(canvasId, label, labels, data, color, chartRef, setChartRef) {
   if (chartRef) chartRef.destroy();
@@ -63,7 +73,10 @@ function renderizarChart(canvasId, label, labels, data, color, chartRef, setChar
 function obtenerDatosFiltrados() {
   const desde = document.getElementById("fechaInicio").value;
   const hasta = document.getElementById("fechaFin").value;
-  if (!desde || !hasta) return;
+  if (!desde || !hasta) {
+    alert("Por favor, selecciona ambas fechas.");
+    return;
+  }
   obtenerDatos(desde, hasta);
 }
 
@@ -74,24 +87,29 @@ function descargarCSV() {
       Authorization: `Bearer ${SUPABASE_KEY}`,
     },
   })
-    .then(res => res.json())
-    .then(data => {
-      if (!data.length) return;
-      const headers = Object.keys(data[0]);
-      const rows = data.map(obj => headers.map(k => obj[k]).join(","));
-      const csv = [headers.join(","), ...rows].join("\n");
-      const blob = new Blob([csv], { type: "text/csv" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = "lecturas.csv";
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    });
+  .then(res => res.json())
+  .then(data => {
+    if (!data.length) return alert("No hay datos para descargar.");
+
+    const headers = Object.keys(data[0]);
+    const rows = data.map(obj => headers.map(k => `"${obj[k]}"`).join(","));
+    const csv = [headers.join(","), ...rows].join("\n");
+
+    const blob = new Blob([csv], { type: "text/csv" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "lecturas.csv";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
 }
 
+// Carga inicial y refresco cada 30s sin filtro
 obtenerDatos();
-setInterval(obtenerDatos, 30000);
+setInterval(() => obtenerDatos(), 30000);
+
 
 
