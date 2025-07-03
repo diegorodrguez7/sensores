@@ -92,10 +92,6 @@ function descargarCSV() {
     });
 }
 
-function alternarTema() {
-  document.body.classList.toggle("oscuro");
-}
-
 obtenerDatos();
 setInterval(obtenerDatos, 30000);
 
