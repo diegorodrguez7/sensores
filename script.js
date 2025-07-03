@@ -107,9 +107,36 @@ function descargarCSV() {
   });
 }
 
-// Carga inicial y refresco cada 30s sin filtro
+// Mostrar fecha de hoy en un elemento arriba del header
+function mostrarFechaHoy() {
+  const fechaHoy = new Date();
+  const opciones = { year: 'numeric', month: 'long', day: 'numeric' };
+  const texto = `Hoy es: ${fechaHoy.toLocaleDateString('es-ES', opciones)}`;
+
+  // Crear un elemento para mostrar la fecha
+  const contenedorFecha = document.createElement('div');
+  contenedorFecha.style.textAlign = 'center';
+  contenedorFecha.style.fontWeight = 'bold';
+  contenedorFecha.style.margin = '10px 0';
+  contenedorFecha.textContent = texto;
+
+  // Insertarlo justo antes del header
+  const body = document.body;
+  const header = document.querySelector('header');
+  body.insertBefore(contenedorFecha, header);
+}
+
+// Llama a la función para mostrar la fecha
+mostrarFechaHoy();
+
+// Carga inicial y refresco cada 5 minutos
 obtenerDatos();
-setInterval(() => obtenerDatos(), 30000);
+setInterval(() => obtenerDatos(), 300000);  // 300000 ms = 5 min
+
+
+// Carga inicial y refresco cada 5 minutos
+obtenerDatos();
+setInterval(() => obtenerDatos(), 300000);  // 300000 ms = 5 min
 
 
 
