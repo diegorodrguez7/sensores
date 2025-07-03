@@ -1,31 +1,37 @@
 <!DOCTYPE html>
 <html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Sensores</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@2.0.0"></script>
+  </head>
+  <body>
+    <header>
+      <h1>🌡️ Dashboard de Sensores</h1>
+      <div class="controls">
+        <label for="fechaInicio">Desde:</label>
+        <input type="datetime-local" id="fechaInicio">
+        <label for="fechaFin">Hasta:</label>
+        <input type="datetime-local" id="fechaFin">
+        <button onclick="obtenerDatosFiltrados()">Filtrar</button>
+        <button onclick="descargarCSV()">Descargar CSV</button>
+        <button onclick="alternarTema()">🌙/☀️</button>
+      </div>
+    </header>
 
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard de Sensores</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-</head>
+    <main>
+      <section class="indicadores">
+        <p><strong>Última temperatura:</strong> <span id="ultimaTemp">--</span> °C</p>
+        <p><strong>Última humedad:</strong> <span id="ultimaHum">--</span> %</p>
+      </section>
 
-<body>
-  <header>
-    <h1>Dashboard de Sensores Ambientales</h1>
-  </header>
+      <canvas id="tempChart" height="100"></canvas>
+      <canvas id="humChart" height="100"></canvas>
+    </main>
 
-  <main>
-    <div class="chart-container">
-      <h2>Temperatura</h2>
-      <canvas id="tempChart"></canvas>
-    </div>
-    <div class="chart-container">
-      <h2>Humedad</h2>
-      <canvas id="humChart"></canvas>
-    </div>
-  </main>
-
-  <script src="script.js"></script>
-</body>
-
+    <script src="script.js"></script>
+  </body>
 </html>
