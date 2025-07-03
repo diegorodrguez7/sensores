@@ -1,68 +1,54 @@
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  text-align: center;
-  padding: 2rem;
-  background: #f7f7f7;
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f3f4f6;
   color: #333;
-  transition: background 0.3s, color 0.3s;
 }
 
 header {
-  margin-bottom: 2rem;
-}
-
-.controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  justify-content: center;
-  align-items: center;
-  margin-top: 1rem;
-}
-
-.controls input,
-.controls button {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-}
-
-.controls button {
-  cursor: pointer;
-  background-color: #4CAF50;
+  background-color: #1e3a8a;
   color: white;
-  border: none;
+  padding: 2rem 1rem;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.indicadores {
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+main {
+  max-width: 960px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.chart-container {
+  background-color: white;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.chart-container h2 {
+  margin-top: 0;
   margin-bottom: 1rem;
-  font-size: 1.1rem;
+  color: #1e3a8a;
+  font-size: 1.2rem;
+  font-weight: 500;
 }
 
 canvas {
-  margin: 2rem auto;
-  max-width: 600px;
-  background: white;
-  padding: 1rem;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
-
-.oscuro {
-  background: #1e1e1e;
-  color: #eee;
-}
-
-.oscuro canvas {
-  background: #2e2e2e;
-}
-
-.oscuro .controls input,
-.oscuro .controls button {
-  background-color: #444;
-  color: white;
-  border-color: #666;
+  max-width: 100%;
+  height: auto;
 }
 
 .oscuro .controls button {
