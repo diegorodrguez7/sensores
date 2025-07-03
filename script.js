@@ -6,9 +6,7 @@ let tempChart, humChart;
 async function obtenerDatos(fechaInicio = null, fechaFin = null) {
   let url = `${SUPABASE_URL}/rest/v1/lecturas?select=*`;
   if (fechaInicio && fechaFin) {
-    const desde = encodeURIComponent(`fecha.gte.${fechaInicio}`);
-    const hasta = encodeURIComponent(`fecha.lte.${fechaFin}`);
-    url += `&${desde}&${hasta}`;
+    url += `&fecha=gte.${encodeURIComponent(fechaInicio)}&fecha=lte.${encodeURIComponent(fechaFin)}`;
   }
 
   const response = await fetch(url, {
@@ -30,6 +28,7 @@ async function obtenerDatos(fechaInicio = null, fechaFin = null) {
   renderizarChart("tempChart", "Temperatura (°C)", etiquetas, temperaturas, "rgb(255, 99, 132)", tempChart, c => tempChart = c);
   renderizarChart("humChart", "Humedad (%)", etiquetas, humedades, "rgb(54, 162, 235)", humChart, c => humChart = c);
 }
+
 
 function renderizarChart(canvasId, label, labels, data, color, chartRef, setChartRef) {
   if (chartRef) chartRef.destroy();
